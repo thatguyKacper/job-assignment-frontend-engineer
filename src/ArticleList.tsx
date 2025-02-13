@@ -1,4 +1,8 @@
+import useArticles from "hooks/useArticles";
+
 export default function ArticleList() {
+  const { articles, error, isLoading } = useArticles();
+
   return (
     <>
       <nav className="navbar navbar-light">
@@ -64,6 +68,41 @@ export default function ArticleList() {
                   </li>
                 </ul>
               </div>
+
+              {error &&
+                <div className="article-preview">
+                  <h1>Oops! Something went wrong...</h1>
+                  <p>{error}</p>
+                </div>
+              }
+              {isLoading &&
+                <div className="article-preview">
+                  <h1>Loading...</h1>
+                  <p>Please wait</p>
+                </div>}
+              {articles.map(article => (
+                <div className="article-preview">
+                  <div className="article-meta">
+                    <a href={`/#/profile/${article.author.username}`}>
+                      <img src={`/#/profile/${article.author.image}`} />
+                    </a>
+                    <div className="info">
+                      <a href={`/#/profile/${article.author.username}`} className="author">
+                        {article.author.username}
+                      </a>
+                      <span className="date">{article.createdAt}</span>
+                    </div>
+                    <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                      <i className="ion-heart" /> {article.favoritedCount}
+                    </button>
+                  </div>
+                  <a href={`/#/${article.slug}`} className="preview-link">
+                    <h1>{article.title}</h1>
+                    <p>{article.description}</p>
+                    <span>Read more...</span>
+                  </a>
+                </div>
+              ))}
 
               <div className="article-preview">
                 <div className="article-meta">

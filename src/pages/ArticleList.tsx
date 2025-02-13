@@ -1,48 +1,13 @@
 import useArticles from "hooks/useArticles";
+import Sidebar from "components/Sidebar";
+import BaseLayout from "layouts/BaseLayout";
+import { Link } from "react-router-dom";
 
 export default function ArticleList() {
   const { articles, error, isLoading } = useArticles();
 
   return (
-    <>
-      <nav className="navbar navbar-light">
-        <div className="container">
-          <a className="navbar-brand" href="/#">
-            conduit
-          </a>
-          <ul className="nav navbar-nav pull-xs-right">
-            <li className="nav-item">
-              {/* Add "active" class when you're on that page" */}
-              <a className="nav-link active" href="/#">
-                Home
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/editor">
-                <i className="ion-compose" />
-                &nbsp;New Article
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/settings">
-                <i className="ion-gear-a" />
-                &nbsp;Settings
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/login">
-                Sign in
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/register">
-                Sign up
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-
+    <BaseLayout>
       <div className="home-page">
         <div className="banner">
           <div className="container">
@@ -83,28 +48,28 @@ export default function ArticleList() {
               {articles.map(article => (
                 <div className="article-preview">
                   <div className="article-meta">
-                    <a href={`/#/profile/${article.author.username}`}>
+                    <Link to={`/profile/${article.author.username}`}>
                       <img src={`/#/profile/${article.author.image}`} />
-                    </a>
+                    </Link>
                     <div className="info">
-                      <a href={`/#/profile/${article.author.username}`} className="author">
+                      <Link to={`/profile/${article.author.username}`} className="author">
                         {article.author.username}
-                      </a>
+                      </Link>
                       <span className="date">{article.createdAt}</span>
                     </div>
                     <button className="btn btn-outline-primary btn-sm pull-xs-right">
                       <i className="ion-heart" /> {article.favoritedCount}
                     </button>
                   </div>
-                  <a href={`/#/${article.slug}`} className="preview-link">
+                  <Link to={`/${article.slug}`} className="preview-link">
                     <h1>{article.title}</h1>
                     <p>{article.description}</p>
                     <span>Read more...</span>
-                  </a>
+                  </Link>
                 </div>
               ))}
 
-              <div className="article-preview">
+              {/* <div className="article-preview">
                 <div className="article-meta">
                   <a href="/#/profile/ericsimmons">
                     <img src="http://i.imgur.com/Qr71crq.jpg" />
@@ -146,56 +111,13 @@ export default function ArticleList() {
                   <p>This is the description for the post.</p>
                   <span>Read more...</span>
                 </a>
-              </div>
+              </div> */}
             </div>
 
-            <div className="col-md-3">
-              <div className="sidebar">
-                <p>Popular Tags</p>
-
-                <div className="tag-list">
-                  <a href="" className="tag-pill tag-default">
-                    programming
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    javascript
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    emberjs
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    angularjs
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    react
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    mean
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    node
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    rails
-                  </a>
-                </div>
-              </div>
-            </div>
+            <Sidebar />
           </div>
         </div>
       </div>
-
-      <footer>
-        <div className="container">
-          <a href="/#" className="logo-font">
-            conduit
-          </a>
-          <span className="attribution">
-            An interactive learning project from <a href="https://thinkster.io">Thinkster</a>. Code &amp; design
-            licensed under MIT.
-          </span>
-        </div>
-      </footer>
-    </>
+    </ BaseLayout>
   );
 }

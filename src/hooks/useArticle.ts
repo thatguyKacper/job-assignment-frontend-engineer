@@ -1,25 +1,32 @@
 import { Article } from "interfaces/article";
 import { useEffect, useState } from "react";
 import articleService from "services/article-service";
+import { useParams } from "react-router-dom";
 
-const useArticles = () => {
-    const [articles, setArticles] = useState<Article[]>([]);
+interface RouteParams {
+    slug: string
+}
+
+const useArticle = () => {
+    const { slug } = useParams<RouteParams>();
+    const [article, setArticle] = useState<Article>();
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+
 
     useEffect(() => {
         setIsLoading(true);
 
         articleService
-            .getAllArticles()
-            .then((res) => setArticles(res.data.articles))
+            .getArticle(slug)
+            .then((res) => setArticle(res.data.article))
             .catch((err) => setError(err.message))
             .finally(() => {
                 setIsLoading(false);
             });
     }, []);
 
-    return { articles, error, isLoading };
+    return { article, error, isLoading };
 }
 
-export default useArticles;
+export default useArticle;

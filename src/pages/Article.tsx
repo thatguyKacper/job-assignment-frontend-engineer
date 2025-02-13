@@ -1,67 +1,49 @@
+import useArticle from "hooks/useArticle";
+import useComments from "hooks/useComments";
+import BaseLayout from "layouts/BaseLayout";
+import { Link } from "react-router-dom";
+
 export default function Article() {
+  const { article, error, isLoading } = useArticle();
+  const { comments } = useComments();
+
   return (
-    <>
-      <nav className="navbar navbar-light">
-        <div className="container">
-          <a className="navbar-brand" href="/#">
-            conduit
-          </a>
-          <ul className="nav navbar-nav pull-xs-right">
-            <li className="nav-item">
-              {/* Add "active" class when you're on that page" */}
-              <a className="nav-link active" href="/#">
-                Home
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/editor">
-                <i className="ion-compose" />
-                &nbsp;New Article
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/settings">
-                <i className="ion-gear-a" />
-                &nbsp;Settings
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/login">
-                Sign in
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/register">
-                Sign up
-              </a>
-            </li>
-          </ul>
+    <BaseLayout>
+      {error &&
+        <div className="article-preview">
+          <h1>Oops! Something went wrong...</h1>
+          <p>{error}</p>
         </div>
-      </nav>
+      }
+      {isLoading &&
+        <div className="article-preview">
+          <h1>Loading...</h1>
+          <p>Please wait</p>
+        </div>}
 
       <div className="article-page">
         <div className="banner">
           <div className="container">
-            <h1>How to build webapps that scale</h1>
+            <h1>{article?.title}</h1>
 
             <div className="article-meta">
-              <a href="/#/profile/ericsimmons">
-                <img src="http://i.imgur.com/Qr71crq.jpg" />
-              </a>
+              <Link to={`/profile/${article?.author.username}`}>
+                <img src={article?.author.image} />
+              </Link>
               <div className="info">
-                <a href="/#/profile/ericsimmons" className="author">
-                  Eric Simons
-                </a>
-                <span className="date">January 20th</span>
+                <Link to={`/profile/${article?.author.username}`} className="author">
+                  {article?.author.username}
+                </Link>
+                <span className="date">{article?.createdAt}</span>
               </div>
               <button className="btn btn-sm btn-outline-secondary">
                 <i className="ion-plus-round" />
-                &nbsp; Follow Eric Simons <span className="counter">(10)</span>
+                &nbsp; Follow {article?.author.username} <span className="counter">({article?.author.following})</span>
               </button>
               &nbsp;&nbsp;
               <button className="btn btn-sm btn-outline-primary">
                 <i className="ion-heart" />
-                &nbsp; Favorite Post <span className="counter">(29)</span>
+                &nbsp; Favorite Post <span className="counter">({article?.favoritedCount})</span>
               </button>
             </div>
           </div>
@@ -70,9 +52,9 @@ export default function Article() {
         <div className="container page">
           <div className="row article-content">
             <div className="col-md-12">
-              <p>Web development technologies have evolved at an incredible clip over the past few years.</p>
-              <h2 id="introducing-ionic">Introducing RealWorld.</h2>
-              <p>It&lsquo;s a great solution for learning how other frameworks work.</p>
+              <p>{article?.description}</p>
+              <h2 id="introducing-ionic">{article?.title}</h2>
+              <p>{article?.body}</p>
             </div>
           </div>
 
@@ -80,23 +62,23 @@ export default function Article() {
 
           <div className="article-actions">
             <div className="article-meta">
-              <a href="/#/profile/ericsimmons">
-                <img src="http://i.imgur.com/Qr71crq.jpg" />
-              </a>
+              <Link to={`/profile/${article?.author.username}`}>
+                <img src={`/profile/${article?.author.image}`} />
+              </Link>
               <div className="info">
-                <a href="/#/profile/ericsimmons" className="author">
-                  Eric Simons
-                </a>
-                <span className="date">January 20th</span>
+                <Link to={`/profile/${article?.author.username}`} className="author">
+                  {article?.author.username}
+                </Link>
+                <span className="date">{article?.createdAt}</span>
               </div>
               <button className="btn btn-sm btn-outline-secondary">
                 <i className="ion-plus-round" />
-                &nbsp; Follow Eric Simons
+                &nbsp; Follow {article?.author.username}
               </button>
               &nbsp;
               <button className="btn btn-sm btn-outline-primary">
                 <i className="ion-heart" />
-                &nbsp; Favorite Post <span className="counter">(29)</span>
+                &nbsp; Favorite Post <span className="counter">({article?.author.following})</span>
               </button>
             </div>
           </div>
@@ -113,7 +95,25 @@ export default function Article() {
                 </div>
               </form>
 
-              <div className="card">
+              {comments.map((comment) => {
+                <div className="card">
+                  <div className="card-block">
+                    <p className="card-text">{comment.body}</p>
+                  </div>
+                  <div className="card-footer">
+                    <Link to={`/profile/${comment.author.username}`} className="comment-author">
+                      <img src={comment.author.image} className="comment-author-img" />
+                    </Link>
+                    &nbsp;
+                    <Link to={`/profile/${comment.author.username}`} className="comment-author">
+                      {comment.author.username}
+                    </Link>
+                    <span className="date-posted">{comment.createdAt}</span>
+                  </div>
+                </div>
+              })}
+
+              {/* <div className="card">
                 <div className="card-block">
                   <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
                 </div>
@@ -147,23 +147,11 @@ export default function Article() {
                     <i className="ion-trash-a" />
                   </span>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
       </div>
-
-      <footer>
-        <div className="container">
-          <a href="/#" className="logo-font">
-            conduit
-          </a>
-          <span className="attribution">
-            An interactive learning project from <a href="https://thinkster.io">Thinkster</a>. Code &amp; design
-            licensed under MIT.
-          </span>
-        </div>
-      </footer>
-    </>
+    </BaseLayout>
   );
 }

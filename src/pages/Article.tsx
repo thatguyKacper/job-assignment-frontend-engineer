@@ -1,28 +1,26 @@
+import Error from "components/Error";
+import Loader from "components/Loader";
 import useArticle from "hooks/useArticle";
 import useComments from "hooks/useComments";
 import BaseLayout from "layouts/BaseLayout";
 import { Link } from "react-router-dom";
 
 export default function Article() {
-  const { article, error, isLoading } = useArticle();
-  const { comments } = useComments();
+  const { article, errorArticle, isLoadingArticle } = useArticle();
+  const { comments, errorComments, isLoadingComments } = useComments();
 
   return (
     <BaseLayout>
-      {error &&
-        <div className="article-preview">
-          <h1>Oops! Something went wrong...</h1>
-          <p>{error}</p>
-        </div>
-      }
-      {isLoading &&
-        <div className="article-preview">
-          <h1>Loading...</h1>
-          <p>Please wait</p>
-        </div>}
-
       <div className="article-page">
         <div className="banner">
+
+          {errorArticle &&
+            <Error error={errorArticle} />
+          }
+          {isLoadingArticle &&
+            <Loader />
+          }
+
           <div className="container">
             <h1>{article?.title}</h1>
 
@@ -94,6 +92,14 @@ export default function Article() {
                   <button className="btn btn-sm btn-primary">Post Comment</button>
                 </div>
               </form>
+
+              {errorComments &&
+                <Error error={errorComments} />
+              }
+              {isLoadingComments &&
+                <Loader />
+              }
+
 
               {comments.map((comment) => {
                 <div className="card">

@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 export default function Nav() {
     return (
         <nav className="navbar navbar-light">
@@ -7,32 +9,31 @@ export default function Nav() {
                 </a>
                 <ul className="nav navbar-nav pull-xs-right">
                     <li className="nav-item">
-                        {/* Add "active" class when you're on that page" */}
-                        <a className="nav-link active" href="/#">
+                        <NavLink className="nav-link" to="/">
                             Home
-                        </a>
+                        </NavLink>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="/#/editor">
+                        <NavLink className="nav-link" to="/editor">
                             <i className="ion-compose" />
                             &nbsp;New Article
-                        </a>
+                        </NavLink>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="/#/settings">
+                        <NavLink className="nav-link" to="/settings">
                             <i className="ion-gear-a" />
                             &nbsp;Settings
-                        </a>
+                        </NavLink>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="/#/login">
+                        <NavLink className="nav-link" to="/login">
                             Sign in
-                        </a>
+                        </NavLink>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="/#/register">
+                        <NavLink className="nav-link" to="/register">
                             Sign up
-                        </a>
+                        </NavLink>
                     </li>
                 </ul>
             </div>

@@ -2,9 +2,11 @@ import useArticles from "hooks/useArticles";
 import Sidebar from "components/Sidebar";
 import BaseLayout from "layouts/BaseLayout";
 import { Link } from "react-router-dom";
+import Error from "components/Error";
+import Loader from "components/Loader";
 
 export default function ArticleList() {
-  const { articles, error, isLoading } = useArticles();
+  const { articles, errorArticles, isLoadingArticle } = useArticles();
 
   return (
     <BaseLayout>
@@ -19,6 +21,7 @@ export default function ArticleList() {
         <div className="container page">
           <div className="row">
             <div className="col-md-9">
+
               <div className="feed-toggle">
                 <ul className="nav nav-pills outline-active">
                   <li className="nav-item">
@@ -34,17 +37,15 @@ export default function ArticleList() {
                 </ul>
               </div>
 
-              {error &&
-                <div className="article-preview">
-                  <h1>Oops! Something went wrong...</h1>
-                  <p>{error}</p>
-                </div>
-              }
-              {isLoading &&
-                <div className="article-preview">
-                  <h1>Loading...</h1>
-                  <p>Please wait</p>
-                </div>}
+              <div className="article-preview">
+                {errorArticles &&
+                  <Error error={errorArticles} />
+                }
+                {isLoadingArticle &&
+                  <Loader />
+                }
+              </div>
+
               {articles.map(article => (
                 <div className="article-preview">
                   <div className="article-meta">
@@ -68,50 +69,6 @@ export default function ArticleList() {
                   </Link>
                 </div>
               ))}
-
-              {/* <div className="article-preview">
-                <div className="article-meta">
-                  <a href="/#/profile/ericsimmons">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" />
-                  </a>
-                  <div className="info">
-                    <a href="/#/profile/ericsimmons" className="author">
-                      Eric Simons
-                    </a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart" /> 29
-                  </button>
-                </div>
-                <a href="/#/how-to-build-webapps-that-scale" className="preview-link">
-                  <h1>How to build webapps that scale</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
-
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="/#/profile/albertpai">
-                    <img src="http://i.imgur.com/N4VcUeJ.jpg" />
-                  </a>
-                  <div className="info">
-                    <a href="/#/profile/albertpai" className="author">
-                      Albert Pai
-                    </a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart" /> 32
-                  </button>
-                </div>
-                <a href="/#/the-song-you-wont-ever-stop-singing" className="preview-link">
-                  <h1>The song you won&lsquo;t ever stop singing. No matter how hard you try.</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div> */}
             </div>
 
             <Sidebar />

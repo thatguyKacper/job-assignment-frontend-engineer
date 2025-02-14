@@ -10,23 +10,23 @@ interface RouteParams {
 const useArticle = () => {
     const { slug } = useParams<RouteParams>();
     const [article, setArticle] = useState<Article>();
-    const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [errorArticle, setErrorArticle] = useState('');
+    const [isLoadingArticle, setIsLoadingArticle] = useState(false);
 
 
     useEffect(() => {
-        setIsLoading(true);
+        setIsLoadingArticle(true);
 
         articleService
             .getArticle(slug)
             .then((res) => setArticle(res.data.article))
-            .catch((err) => setError(err.message))
+            .catch((err) => setErrorArticle(err.message))
             .finally(() => {
-                setIsLoading(false);
+                setIsLoadingArticle(false);
             });
     }, []);
 
-    return { article, error, isLoading };
+    return { article, errorArticle, isLoadingArticle };
 }
 
 export default useArticle;

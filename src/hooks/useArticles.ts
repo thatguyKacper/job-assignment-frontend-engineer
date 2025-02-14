@@ -4,22 +4,22 @@ import articleService from "services/article-service";
 
 const useArticles = () => {
     const [articles, setArticles] = useState<Article[]>([]);
-    const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [errorArticles, setErrorArticles] = useState('');
+    const [isLoadingArticle, setIsLoadingArticle] = useState(false);
 
     useEffect(() => {
-        setIsLoading(true);
+        setIsLoadingArticle(true);
 
         articleService
             .getAllArticles()
             .then((res) => setArticles(res.data.articles))
-            .catch((err) => setError(err.message))
+            .catch((err) => setErrorArticles(err.message))
             .finally(() => {
-                setIsLoading(false);
+                setIsLoadingArticle(false);
             });
     }, []);
 
-    return { articles, error, isLoading };
+    return { articles, errorArticles, isLoadingArticle };
 }
 
 export default useArticles;

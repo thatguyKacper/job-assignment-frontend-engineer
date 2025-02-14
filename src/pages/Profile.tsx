@@ -1,22 +1,47 @@
+import Error from "components/Error";
+import Loader from "components/Loader";
+import useArticles from "hooks/useArticles";
+import useProfile from "hooks/useProfile";
+import { Article } from "interfaces/article";
 import BaseLayout from "layouts/BaseLayout";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { searchAuthor } from "utils/searchAuthor";
 
 export default function Profile() {
+  const [posts, setPosts] = useState<Article[]>([]);
+  const { profile, errorProfile, isLoadingProfile } = useProfile();
+  const { articles, errorArticles, isLoadingArticle } = useArticles();
+
+  useEffect(() => {
+    const match = searchAuthor(articles, profile?.username);
+
+    setPosts(match);
+  }, [articles, profile?.username]);
+
   return (
     <BaseLayout>
       <div className="profile-page">
         <div className="user-info">
           <div className="container">
             <div className="row">
+
+              {errorProfile &&
+                <Error error={errorProfile} />
+              }
+              {isLoadingProfile &&
+                <Loader />
+              }
+
               <div className="col-xs-12 col-md-10 offset-md-1">
-                <img src="http://i.imgur.com/Qr71crq.jpg" className="user-img" />
-                <h4>Eric Simons</h4>
+                <img src={profile?.image} className="user-img" />
+                <h4>{profile?.username}</h4>
                 <p>
-                  Cofounder @GoThinkster, lived in Aol&lsquo;s HQ for a few months, kinda looks like Peeta from the
-                  Hunger Games
+                  {profile?.bio}
                 </p>
                 <button className="btn btn-sm btn-outline-secondary action-btn">
                   <i className="ion-plus-round" />
-                  &nbsp; Follow Eric Simons
+                  &nbsp; Follow {profile?.username}
                 </button>
               </div>
             </div>
@@ -41,53 +66,36 @@ export default function Profile() {
                 </ul>
               </div>
 
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="/#/profile/ericsimmons">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" />
-                  </a>
-                  <div className="info">
-                    <a href="/#/profile/ericsimmons" className="author">
-                      Eric Simons
-                    </a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart" /> 29
-                  </button>
-                </div>
-                <a href="/#/how-to-build-webapps-that-scale" className="preview-link">
-                  <h1>How to build webapps that scale</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
+              {errorArticles &&
+                <Error error={errorArticles} />
+              }
+              {isLoadingArticle &&
+                <Loader />
+              }
 
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="/#/profile/albertpai">
-                    <img src="http://i.imgur.com/N4VcUeJ.jpg" />
-                  </a>
-                  <div className="info">
-                    <a href="/#/profile/albertpai" className="author">
-                      Albert Pai
-                    </a>
-                    <span className="date">January 20th</span>
+              {posts.map((post: Article) => (
+                <div className="article-preview">
+                  <div className="article-meta">
+                    <Link to={`/profile/${post.author.username}`}>
+                      <img src={post.author.image} />
+                    </Link>
+                    <div className="info">
+                      <Link to={`/profile/${post.author.username}`} className="author">
+                        {post.author.username}
+                      </Link>
+                      <span className="date">{post.createdAt}</span>
+                    </div>
+                    <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                      <i className="ion-heart" /> {post.favoritedCount}
+                    </button>
                   </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart" /> 32
-                  </button>
+                  <Link to={`/articles/${post.slug}`} className="preview-link">
+                    <h1>{post.title}</h1>
+                    <p>{post.description}</p>
+                    <span>Read more...</span>
+                  </Link>
                 </div>
-                <a href="/#/the-song-you-wont-ever-stop-singing" className="preview-link">
-                  <h1>The song you won&lsquo;t ever stop singing. No matter how hard you try.</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                  <ul className="tag-list">
-                    <li className="tag-default tag-pill tag-outline">Music</li>
-                    <li className="tag-default tag-pill tag-outline">Song</li>
-                  </ul>
-                </a>
-              </div>
+              ))}
             </div>
           </div>
         </div>

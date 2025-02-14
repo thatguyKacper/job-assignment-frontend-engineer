@@ -10,23 +10,23 @@ interface RouteParams {
 const useComments = () => {
     const { slug } = useParams<RouteParams>();
     const [comments, setComments] = useState<Comment[]>([]);
-    const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [errorComments, setErrorComments] = useState('');
+    const [isLoadingComments, setIsLoadingComments] = useState(false);
 
 
     useEffect(() => {
-        setIsLoading(true);
+        setIsLoadingComments(true);
 
         articleService
             .getComments(slug)
             .then((res) => setComments(res.data.comments))
-            .catch((err) => setError(err.message))
+            .catch((err) => setErrorComments(err.message))
             .finally(() => {
-                setIsLoading(false);
+                setIsLoadingComments(false);
             });
     }, []);
 
-    return { comments, error, isLoading };
+    return { comments, errorComments, isLoadingComments };
 }
 
 export default useComments;

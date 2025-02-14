@@ -1,6 +1,15 @@
+import { clearSession } from "auth/auth-helpers";
 import BaseLayout from "layouts/BaseLayout";
+import { useHistory } from "react-router-dom";
 
 export default function Settings() {
+  const history = useHistory();
+
+  const handleLogout = () => {
+    clearSession();
+    history.replace('/');
+  };
+
   return (
     <BaseLayout>
       <div className="settings-page">
@@ -30,9 +39,9 @@ export default function Settings() {
                 </fieldset>
               </form>
               <hr />
-              <a className="btn btn-outline-danger" href="/#/logout">
+              <button onClick={handleLogout} className="btn btn-outline-danger">
                 Or click here to logout.
-              </a>
+              </button>
             </div>
           </div>
         </div>
